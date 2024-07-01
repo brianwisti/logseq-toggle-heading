@@ -2,7 +2,9 @@
 
 ## What it does
 
-Provides a command to toggle `heading` as a boolean property
+Provides a *Toggle Heading* command to toggle `heading` as a boolean property. This can also be triggered with `mod-1`.
+
+There are no additional interfaces or customizations.
 
 ## Why?
 
@@ -10,4 +12,4 @@ If `heading` is true, then the heading level is determined by the current depth 
 
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE).

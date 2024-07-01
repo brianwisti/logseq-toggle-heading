@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-toggle-heading",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/index.html",
   "scripts": {
     "dev": "vite",
@@ -12,13 +12,17 @@
     "@logseq/libs": "^0.0.14"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/exec": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/npm": "10.0.6",
     "@types/node": "18.19.31",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "autoprefixer": "10.4.19",
+    "conventional-changelog-conventionalcommits": "5.0.0",
     "eslint": "8.57.0",
-    "eslint-plugin-react": "7.34.1",
-    "eslint-plugin-react-hooks": "4.6.2",
+    "semantic-release": "21.1.2",
     "typescript": "4.9.5",
     "vite": "4.5.3",
     "vite-plugin-logseq": "1.1.2"

@@ -1,60 +1,48 @@
 import "@logseq/libs";
 
-import React from "react";
-import * as ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-
-import { logseq as PL } from "../package.json";
-
-// @ts-expect-error
-const css = (t, ...args) => String.raw(t, ...args);
-
-const pluginId = PL.id;
-
-function main() {
-  console.info(`#${pluginId}: MAIN`);
-  const root = ReactDOM.createRoot(document.getElementById("app")!);
-
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-
-  function createModel() {
-    return {
-      show() {
-        logseq.showMainUI();
-      },
-    };
+async function determineBlockId(block_id?: string) {
+  if (block_id) {
+    return block_id
   }
 
-  logseq.provideModel(createModel());
-  logseq.setMainUIInlineStyle({
-    zIndex: 11,
-  });
+  const block = await logseq.Editor.getCurrentBlock()
+  if (block) {
+    return block.uuid
+  }
 
-  const openIconName = "template-plugin-open";
+  const blocks = await logseq.Editor.getSelectedBlocks()
+  if (blocks && blocks.length > 0) {
+    return blocks[0].uuid
+  }
 
-  logseq.provideStyle(css`
-    .${openIconName} {
-      opacity: 0.55;
-      font-size: 20px;
-      margin-top: 4px;
-    }
-
-    .${openIconName}:hover {
-      opacity: 0.9;
-    }
-  `);
-
-  logseq.App.registerUIItem("toolbar", {
-    key: openIconName,
-    template: `
-      <div data-on-click="show" class="${openIconName}">⚙️</div>
-    `,
-  });
+  throw new Error("could not determine current block id")
 }
 
-logseq.ready(main).catch(console.error);
+async function toggleHeading(block_id?: string) {
+  block_id = await determineBlockId(block_id)
+  console.log(`toggle heading: ${block_id}`)
+
+  const currentValue: boolean = await logseq.Editor.getBlockProperty(block_id, "heading")
+  await logseq.Editor.upsertBlockProperty(block_id, "heading", !currentValue)
+}
+
+async function main() {
+  const commandLabel = "Toggle Heading"
+  logseq.Editor.registerSlashCommand(commandLabel, async () => { await toggleHeading() })
+
+  logseq.App.registerCommandPalette(
+    {
+      key: "toggle-heading",
+      label: commandLabel,
+      keybinding: {
+        mode: 'global',
+        binding: 'mod+1',
+      },
+    },
+    async () => { await toggleHeading()}
+  )
+
+  // No block context menu item until I'm confident Logseq will hand me the correct block.
+}
+
+logseq.ready(main).catch(console.error)
